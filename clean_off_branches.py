@@ -89,24 +89,37 @@ im = im/255
 print(im.shape)
 print(im[2000][1000:1100])
 
-gauss_kernel, kernel = gen_lin_gauss_kernel(1, var=0.01)
-print(kernel)
-print(gauss_kernel)
-
 #for i in range(10):
 #    ret = clean(im, i/10)
 #    imageio.imwrite('ask-hi-res-hyffsad_{}.png'.format(i/10), ret)
 
+#for i in np.arange(-np.pi*10/20, np.pi*10/20, np.pi/20):
+    #print('{} {}'.format(i, np.tan(i)))
 
-ret = clean(im, 0.002, kernel=gauss_kernel)
+tilts = np.tan(np.arange(-np.pi*10/20, np.pi*10/20, np.pi/20))
+
+print(tilts)
+
+filtered = []
+for i in range(len(tilts)):
+    gauss_kernel, kernel = gen_lin_gauss_kernel(tilts[i], var=0.001)
+    print(gauss_kernel)
+    temp = clean(im, 0.01, kernel=gauss_kernel)
+    temp = clean(temp, 0.01, kernel=gauss_kernel)
+    #temp = clean(temp, 0.01, kernel=gauss_kernel)
+    filtered.append(temp)
+
+    imageio.imwrite('test_filters_tilt_{}.png'.format(i), temp)
+
+
+
+#gauss_kernel, kernel = gen_lin_gauss_kernel(-1, var=0.0001)
+#ret = clean(im, 0.01, kernel=gauss_kernel)
+#ret = clean(ret, 0.01, kernel=gauss_kernel)
+#ret = clean(ret, 0.01, kernel=gauss_kernel)
 #ret = clean(im, 0.3)
-imageio.imwrite('test_filters_tilt3.png', ret)
 
-#imageio.imwrite('ask-hi-res-hyffsad_0.5_steg1.png', ret)
-#ret = clean(ret, 0.5)
-#imageio.imwrite('ask-hi-res-hyffsad_0.5_steg2.png', ret)
-#ret = clean(ret, 0.5)
-#imageio.imwrite('ask-hi-res-hyffsad_0.5_steg3.png', ret)
+#imageio.imwrite('test_filters_tilt5.png', ret)
 
 #vv.imshow(im)
 #input("Press Enter to continue...")
